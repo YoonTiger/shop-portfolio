@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 500px;
+        }
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
+</head>
+
+<body>
+
+<div th:object="${member}" class="container">
+
+    <div class="py-5 text-center">
+        <h2>회원 정보</h2>
+    </div>
+
+    <div>
+        <label>아이디</label>
+        <input th:field="*{name}" type="text" class="form-control" readonly>
+    </div>
+
+    <div>
+        <label>비밀번호</label>
+        <input th:field="*{password}" type="text" class="form-control" readonly>
+    </div>
+
+    <div>
+        <label>도시</label>
+        <input th:field="*{city}" class="form-control" readonly>
+    </div>
+
+    <div>
+        <label>거리</label>
+        <input th:field="*{street}" class="form-control" readonly>
+    </div>
+
+    <div>
+        <label>우편번호</label>
+        <input th:field="*{zipcode}" class="form-control" readonly>
+    </div>
+
+    <hr class="my-4">
+
+    <div class="row">
+
+        <div class="col">
+            <a th:href="|@{/member/{id}/edit(id=${member.id})}|"
+               th:text="#{button.update}" class="btn btn-danger btn" type="button">
+                update
+            </a>
+        </div>
+
+        <div class="col">
+            <a th:href="|@{/member/{id}/delete(id=${member.id})}|"
+               th:text="#{button.withdraw}" class="btn btn-danger btn" type="button">
+                withdraw
+            </a>
+        </div>
+
+        <div class="col">
+            <a th:href="|@{/order/myOrder}|"
+                class="btn btn-danger btn" type="button">
+                주문현황
+            </a>
+        </div>
+
+        <div class="col">
+            <a th:href="|@{/cart/{id}/myCart(id=${member.id})}|"
+               class="btn btn-danger btn" type="button">
+                장바구니
+            </a>
+        </div>
+
+        <div class="col">
+            <a th:href="|@{/order/mySale}|"
+               class="btn btn-danger btn" type="button">
+                판매현황
+            </a>
+        </div>
+
+        <div class="col">
+            <a th:href="|@{/}|"
+               th:text="#{button.home}" class="btn btn-danger btn float-end" type="button">
+                Home
+            </a>
+        </div>
+
+    </div>
+</div> <!-- /container -->
+</body>
+</html>

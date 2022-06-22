@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../../css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container" style="max-width: 600px">
+
+    <div class="py-5 text-center">
+
+        <h2>회원 목록</h2>
+
+        <button th:text="#{button.home}" th:onclick="|location.href='@{/}'|"
+                class="btn btn-danger float-end" type="button">
+            HOME
+        </button>
+
+        <div>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>아이디</th>
+                    <th>도시</th>
+                    <th>주소</th>
+                    <th>우편번호</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="member : ${members}">
+                    <td th:text="${member.id}"></td>
+                    <td th:text="${member.name}"></td>
+                    <td th:text="${member.city}"></td>
+                    <td th:text="${member.street}"></td>
+                    <td th:text="${member.zipcode}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div><!-- /container -->
+</body>
+</html>

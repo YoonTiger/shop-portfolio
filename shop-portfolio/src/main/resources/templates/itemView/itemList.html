@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../../css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container" style="max-width: 700px">
+
+    <div class="py-5 text-center">
+        <h2>상품 목록</h2>
+    </div>
+
+    <div class="row">
+
+
+
+    </div>
+
+    <hr class="my-4">
+
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>상품명</th>
+                <th>가격</th>
+                <th>수량</th>
+                <th>판매자</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="item : ${items}">
+                <td>
+                    <a th:text="${item.name}" th:href="|@{/item/{id}/info(id=${item.id})}|">
+                        상품명
+                    </a>
+                </td>
+                <td>
+                    <a th:text="${item.price}">
+                        가격
+                    </a>
+                </td>
+                <td>
+                    <a th:text="${item.stockQuantity}">
+                        수량
+                    </a>
+                </td>
+                <td>
+                    <a th:text="|${item.sellerName}|">
+                        판매자
+                    </a>
+                </td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+        </form>
+
+        <div class="row">
+            <div class="col">
+                <button th:text="#{button.home}" th:onclick="|location.href='@{/}'|"
+                        class="btn btn-danger float-start" type="button">
+                    Home
+                </button>
+            </div>
+            <div class="col">
+                <a th:text="#{button.add}" th:href="|@{/item/add}|"
+                        class="btn btn-danger float-end" type="button">
+                    Add
+                </a>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div> <!-- /container -->
+</body>
+</html>

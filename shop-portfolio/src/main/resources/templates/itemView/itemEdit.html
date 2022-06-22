@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../../css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .container {
+            max-width: 600px;
+        }
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
+</head>
+
+<body>
+
+<div th:object="${item}" class="container">
+
+    <div class="py-5 text-center">
+        <h2>상품 수정</h2>
+    </div>
+
+
+    <form th:action="|@{/item/{id}/edit(id=${item.id})}|" method="post">
+
+        <div>
+            <label>번호</label>
+            <input th:field="*{id}" type="text" class="form-control" readonly/>
+        </div>
+        <div>
+            <label>판매자</label>
+            <input th:value="*{sellerName}" id="sellerName" name="sellerName"
+                   type="text" class="form-control" readonly>
+        </div>
+        <div>
+            <label>상품명</label>
+            <input th:field="*{name}" th:errorclass="field-error" type="text" class="form-control"/>
+            <div th:errors="*{name}" class="field-error">상품명 오류</div>
+        </div>
+
+        <div>
+            <label>가격</label>
+            <input th:field="*{price}" th:errorclass="field-error" type="text" class="form-control">
+            <div th:errors="*{price}" class="field-error">가격 오류</div>
+        </div>
+
+        <div>
+            <label>수량</label>
+            <input th:field="*{stockQuantity}" th:errorclass="field-error" class="form-control">
+            <div th:errors="*{stockQuantity}" class="field-error">수량 오류</div>
+
+        </div>
+
+        <hr class="my-4">
+
+        <div class="row">
+            <div class="col">
+                <button th:text="#{button.update}" class="btn btn-danger btn" type="submit">
+                    update
+                </button>
+                <a th:href="|@{/item/{id}/info(id=${item.id})}|"
+                   th:text="#{button.back}" class="btn btn-secondary btn" type="button">
+                    back
+                </a>
+            </div>
+
+        </div>
+    </form>
+</div> <!-- /container -->
+</body>
+</html>

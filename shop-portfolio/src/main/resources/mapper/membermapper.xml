@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="basic.shop.repository.MemberRepository">
+
+    <resultMap id="memberMap" type="member">
+
+        <id property="id" column="member_id"/>
+        <result property="name" column="member_name"/>
+        <result property="password" column="member_password"/>
+        <result property="roll" column="member_roll"/>
+
+
+        <association property="address" javaType="Address">
+            <result property="city" column="city"/>
+            <result property="street" column="street"/>
+            <result property="zipcode" column="zipcode"/>
+        </association>
+
+    </resultMap>
+
+
+
+    <insert id="save" parameterType="member" useGeneratedKeys="true" keyProperty="id">
+        INSERT
+        INTO
+        member(member_name,member_password,member_roll,city,street,zipcode)
+        VALUES(#{name},#{password},#{roll},#{address.city},#{address.street},#{address.zipcode})
+    </insert>
+
+    <update id="update" parameterType="member" useGeneratedKeys="true" keyProperty="id">
+        UPDATE
+        member
+        SET
+        member_name=#{name},member_password=#{password},member_roll=#{roll},
+        city=#{address.city},street=#{address.street},zipcode=#{address.zipcode}
+        WHERE member_id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE
+        FROM
+        member
+        WHERE member_id=#{id}
+    </delete>
+
+
+    <select id="findById" parameterType="Long" resultMap="memberMap">
+        SELECT *
+        FROM
+        member
+        WHERE member_id=#{id}
+    </select>
+
+    <select id="findByName" parameterType="String" resultMap="memberMap">
+        SELECT *
+        FROM
+        member
+        WHERE member_name=#{name}
+    </select>
+
+    <select id="findAll" resultMap="memberMap">
+        SELECT *
+        FROM
+        member
+    </select>
+
+
+
+</mapper>

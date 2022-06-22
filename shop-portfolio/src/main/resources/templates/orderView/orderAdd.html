@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../../css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="container" style="max-width: 600px">
+
+    <div class="py-5 text-center">
+        <h2>상품 상세</h2>
+    </div>
+
+    <form th:object="${item}" method="post">
+
+        <div>
+            <label>번호</label>
+            <input th:field="*{id}" type="text" class="form-control" readonly>
+        </div>
+        <div>
+            <label>판매자</label>
+            <input th:value="*{sellerName}" id="sellerName" name="sellerName"
+                   type="text" class="form-control" readonly>
+        </div>
+        <div>
+            <label>상품명</label>
+            <input th:field="*{name}" type="text" class="form-control" readonly>
+        </div>
+
+        <div>
+            <label>가격</label>
+            <input th:field="*{price}" type="text" class="form-control" readonly>
+        </div>
+
+        <div>
+            <label>수량</label>
+            <input th:field="*{stockQuantity}" type="text" class="form-control" readonly>
+        </div>
+        <div>
+            <label>주문수량</label>
+            <input id="count" name="count" type="text" class="form-control">
+        </div>
+
+        <hr class="my-4">
+
+        <div class="row">
+
+            <div class="col-2">
+                <button th:text="#{button.orderNow}" class="btn btn-danger btn" type="submit">
+                    orderNow
+                </button>
+            </div>
+            <div class="col-2">
+                <button th:text="#{button.cart}" th:formaction="|@{/cart/{id}/addCart(id=${item.id})}|" class="btn btn-danger btn" type="submit">
+                    cart
+                </button>
+            </div>
+            <div class="col">
+                <a th:href="|@{/item/list}|"
+                   th:text="#{button.back}" class="btn btn-secondary btn float-end" type="button">
+                    back
+                </a>
+            </div>
+
+        </div>
+    </form>
+</div> <!-- /container -->
+</body>
+</html>

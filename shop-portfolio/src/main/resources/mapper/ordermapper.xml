@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="basic.shop.repository.OrderRepository">
+
+    <!--기본 orderMap-->
+    <resultMap id="orderMap" type="order">
+        <id property="id" column="order_id"/>
+        <result property="orderDate" column="order_orderDate"/>
+        <result property="status" column="order_status"/>
+
+        <association property="delivery" javaType="Delivery">
+            <id property="id" column="delivery_id"/>
+            <result property="address.city" column="city"/>
+            <result property="address.street" column="street"/>
+            <result property="address.zipcode" column="zipcode"/>
+            <result property="status" column="delivery_status"/>
+        </association>
+
+        <association property="member" column="member_id" resultMap="memberMap"/>
+
+        <collection property="orderItems" ofType="orderItem" resultMap="orderItemMap"/>
+
+    </resultMap>
+
+    <!--memberMap-->
+    <resultMap id="memberMap" type="member">
+        <id property="id" column="member_id"/>
+        <result property="name" column="member_name"/>
+        <result property="password" column="member_password"/>
+        <result property="roll" column="member_roll"/>
+
+
+        <association property="address" javaType="Address">
+            <result property="city" column="city"/>
+            <result property="street" column="street"/>
+            <result property="zipcode" column="zipcode"/>
+        </association>
+
+    </resultMap>
+
+    <!--orderItemMap-->
+    <resultMap id="orderItemMap" type="orderItem">
+        <id property="id" column="order_item_id"/>
+        <result property="orderPrice" column="order_price"/>
+        <result property="count" column="order_count"/>
+
+        <association property="item" column="item_id" resultMap="itemMap"/>
+
+    </resultMap>
+
+    <!--itemMap-->
+    <resultMap id="itemMap" type="item">
+        <id property="id" column="item_id"/>
+        <result property="name" column="item_name"/>
+        <result property="price" column="item_price"/>
+        <result property="stockQuantity" column="item_stockQuantity"/>
+
+        <association property="member" javaType="member">
+            <id property="id" column="seller_id"/>
+            <result property="name" column="seller_name"/>
+        </association>
+
+    </resultMap>
+
+
+    <!--cartItemMap-->
+    <resultMap id="cartItemMap" type="cartItem">
+        <id property="id" column="cart_item_id"/>
+        <result property="name" column="cart_item_name"/>
+        <result property="price" column="cart_item_price"/>
+        <result property="count" column="cart_item_count"/>
+        <result property="sellerName" column="cart_item_sellerName"/>
+
+        <association property="member" column="member_id" resultMap="memberMap"/>
+        <association property="item" column="item_id" resultMap="itemMap"/>
+
+    </resultMap>
+
+
+    <!---**********주문**********-->
+
+    <!--주문 저장-->
+    <insert id="saveOrder" parameterType="order" useGeneratedKeys="true" keyProperty="id">
+        INSERT
+        INTO
+        orders(order_orderDate,order_status,member_id,delivery_id)
+        VALUES(#{orderDate},#{status},#{member.id},#{delivery.id})
+    </insert>
+
+    <!--주문 업데이트-->
+    <update id="updateOrder" parameterType="order" useGeneratedKeys="true" keyProperty="id">
+        UPDATE
+        orders
+        SET
+        order_status=#{status}
+        WHERE
+        order_id=#{id}
+    </update>
+
+    <!--주문 삭제-->
+    <delete id="delete" parameterType="Long">
+        DELETE
+        FROM
+        orders
+        WHERE order_id=#{id}
+    </delete>
+
+    <!--모든 주문 목록 조회 (관리자 기능)-->
+    <select id="findAll" resultMap="orderMap">
+        SELECT
+        o.order_id,o.order_orderDate,o.order_status,
+        d.delivery_id,d.delivery_status,d.city,d.street,d.zipcode,
+        m.member_id,
+        m.member_name
+
+        FROM orders o
+        JOIN member m
+        ON o.member_id=m.member_id
+        JOIN delivery d
+        ON o.delivery_id=d.delivery_id
+    </select>
+
+    <!--내 주문 목록 조회-->
+    <select id="findByMemberId" parameterType="Long" resultMap="orderMap">
+        SELECT
+        o.order_id,o.order_orderDate,o.order_status,
+        m.member_id, m.member_name,
+        d.delivery_id,d.delivery_status,d.city,d.street,d.zipcode
+
+        FROM orders o
+
+        JOIN member m
+        ON o.member_id=m.member_id
+        JOIN delivery d
+        ON o.delivery_id=d.delivery_id
+
+        WHERE o.member_id=#{id}
+    </select>
+
+    <!--주문 상세 조회-->
+    <select id="findByOrderId" parameterType="Long" resultMap="orderMap">
+        SELECT
+        o.order_id,o.order_orderDate,o.order_status,
+        d.delivery_id,d.delivery_status,d.city,d.street,d.zipcode,
+        oi.order_item_id,oi.order_price,oi.order_count,
+        i.item_id,i.item_name,i.item_price,i.item_stockQuantity,
+        m.member_id,
+        m.member_name,
+        s.member_id AS seller_id,
+        s.member_name AS seller_name
+
+        FROM orders o
+
+        JOIN member m
+        ON o.member_id=m.member_id
+        JOIN delivery d
+        ON o.delivery_id=d.delivery_id
+        JOIN order_item oi
+        ON o.order_id=oi.order_id
+        JOIN item i
+        ON oi.item_id=i.item_id
+        JOIN member s
+        ON s.member_id=i.seller_id
+
+        WHERE o.order_id=#{id}
+    </select>
+
+
+    <!---**********주문 상품**********-->
+
+    <!--주문 상품 저장-->
+    <insert id="saveOrderItem" parameterType="orderItem" useGeneratedKeys="true" keyProperty="id">
+        INSERT
+        INTO
+        order_item(order_price,order_count,item_id,order_id)
+        VALUES(#{orderPrice},#{count},#{item.id},#{order.id})
+    </insert>
+
+    <!--주문 상품들 저장-->
+    <insert id="saveOrderItems" parameterType="List" useGeneratedKeys="true" keyProperty="id">
+        INSERT
+        INTO order_item(order_price,order_count,item_id,order_id)
+        VALUES
+        <foreach collection="list" item="oi" separator=",">
+            (#{oi.orderPrice},#{oi.count},#{oi.item.id},#{oi.order.id})
+        </foreach>
+    </insert>
+
+    <!--주문 상품 조회-->
+    <select id="findOrderItemByOrderId" parameterType="Long" resultMap="orderItemMap">
+        SELECT
+        oi.order_item_id,oi.order_price,oi.order_count,
+        i.item_id,i.item_name,i.item_price,i.item_stockQuantity,
+        m.member_id AS seller_id,
+        m.member_name AS seller_name
+
+        FROM order_item oi
+
+        JOIN item i
+        ON oi.item_id=i.item_id
+        JOIN member m
+        ON m.member_id=i.seller_id
+
+        WHERE oi.order_id=#{id}
+    </select>
+
+    <!--주문 상품들 조회-->
+    <!--오더아이디를 이용해 "오더아이탬"을 가져오기떄문에 당연히 오더정보는 ID 뿐이다-->
+    <select id="findOrderItemByOrderIds" parameterType="List" resultMap="orderItemMap">
+        SELECT
+        oi.order_item_id,oi.order_price,oi.order_count,
+        i.item_id,i.item_name,i.item_price,i.item_stockQuantity,
+        m.member_id AS seller_id,
+        m.member_name AS seller_name
+
+        FROM order_item oi
+
+        JOIN item i
+        ON oi.item_id=i.item_id
+        JOIN member m
+        ON i.seller_id=m.member_id
+
+        WHERE oi.order_id
+        IN
+        <foreach collection="list" item="orderIds" open="(" close=")" separator=",">
+            #{orderIds}
+        </foreach>
+    </select>
+
+
+
+    <!---**********배송**********-->
+
+    <!--배송 저장-->
+    <insert id="saveDelivery" parameterType="delivery" useGeneratedKeys="true" keyProperty="id">
+        INSERT
+        INTO
+        delivery(city,street,zipcode,delivery_status)
+        VALUES(#{address.city},#{address.street},#{address.zipcode},#{status})
+    </insert>
+
+    <!--배송 업데이트-->
+    <update id="updateDelivery" parameterType="delivery" useGeneratedKeys="true" keyProperty="id">
+        UPDATE
+        delivery
+        SET
+        delivery_status=#{status}
+        WHERE
+        delivery_id=#{id}
+    </update>
+
+    <!--배송 삭제-->
+    <delete id="deleteDeliveryById" parameterType="Long">
+        DELETE
+        FROM
+        delivery
+        WHERE delivery_id=#{id}
+    </delete>
+
+    <!--배송들 삭제-->
+    <delete id="deleteDeliveryByIds" parameterType="List">
+        DELETE
+        FROM
+        delivery
+        WHERE delivery_id
+        IN
+        <foreach collection="list" item="deliveryIds" separator="," open="(" close=")">
+            #{deliveryIds}
+        </foreach>
+
+    </delete>
+
+
+    <!---**********장바구니**********-->
+
+    <!--장바구니에 상품 추가-->
+    <insert id="addCart" parameterType="cartItem" useGeneratedKeys="true" keyProperty="id">
+        INSERT
+        INTO
+        cart_item(cart_item_name,cart_item_count,cart_item_price,cart_item_sellerName,buyer_id,itemcart_id)
+        VALUES (#{name},#{count},#{price},#{sellerName},#{member.id},#{item.id})
+    </insert>
+
+    <!--장바구니 취소-->
+    <delete id="deleteCartItemsByMemberId" parameterType="Long">
+        DELETE
+        FROM
+        cart_item ci
+        WHERE ci.buyer_id=#{id}
+    </delete>
+
+    <!--내 장바구니 목록 조회-->
+    <select id="findCartItemsByMemberId" parameterType="Long" resultMap="cartItemMap">
+        SELECT
+        ci.cart_item_id,ci.cart_item_name,ci.cart_item_price,
+        ci.cart_item_count,ci.cart_item_sellerName,
+        m.member_id,m.member_name,
+        i.item_id,i.item_name,i.item_price,i.item_stockQuantity
+
+        FROM cart_item ci
+
+        JOIN member m
+        ON ci.buyer_id=m.member_id
+        JOIN item i
+        ON ci.itemCart_id=i.item_id
+
+        WHERE m.member_id=#{id}
+    </select>
+
+
+    <!--**********판매**********-->
+    <!--내 판매 목록 조회-->
+    <select id="findMySaleByMemberId" parameterType="Long" resultMap="orderMap">
+        SELECT
+        o.order_id,o.order_orderDate,o.order_status,
+        d.delivery_id,d.delivery_status,d.city,d.street,d.zipcode,
+        oi.order_item_id,oi.order_price,oi.order_count,
+        i.item_id,i.item_name,i.item_price,i.item_stockQuantity,
+        m.member_id,
+        m.member_name,
+        s.member_id AS seller_id,
+        s.member_name AS seller_name
+
+        FROM orders o
+
+        JOIN member m
+        ON o.member_id=m.member_id
+        JOIN delivery d
+        ON o.delivery_id=d.delivery_id
+        JOIN order_item oi
+        ON o.order_id=oi.order_id
+        JOIN item i
+        ON oi.item_id=i.item_id
+        JOIN member s
+        ON s.member_id=i.seller_id
+
+        WHERE s.member_id=#{id}
+    </select>
+
+    <!--내 판매 정보 상세-->
+    <select id="findSaleItemByIds" parameterType="Long" resultMap="orderMap">
+        SELECT
+        o.order_id,o.order_orderDate,o.order_status,
+        d.delivery_id,d.delivery_status,d.city,d.street,d.zipcode,
+        oi.order_item_id,oi.order_price,oi.order_count,
+        i.item_id,i.item_name,i.item_price,i.item_stockQuantity,
+        m.member_id,
+        m.member_name,
+        s.member_id AS seller_id,
+        s.member_name AS seller_name
+
+        FROM orders o
+
+        JOIN member m
+        ON o.member_id=m.member_id
+        JOIN delivery d
+        ON o.delivery_id=d.delivery_id
+        JOIN order_item oi
+        ON o.order_id=oi.order_id
+        JOIN item i
+        ON oi.item_id=i.item_id
+        JOIN member s
+        ON s.member_id=i.seller_id
+
+        WHERE s.member_id=#{memberId}
+        AND o.order_id=#{orderId}
+    </select>
+
+</mapper>

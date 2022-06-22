@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../../css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .container {
+            max-width: 500px;
+        }
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="py-5 text-center">
+        <h2>회원 가입</h2>
+    </div>
+
+    <form th:object="${member}" action="/member/join" method="post">
+
+        <div>
+            <label>아이디</label>
+            <input th:field="*{name}" th:errorclass="field-error" type="text" class="form-control"
+                   placeholder="아이디를 입력하세요">
+            <div th:errors="*{name}" class="field-error">아이디 오류</div>
+        </div>
+
+        <div>
+            <label>비밀번호</label>
+            <input th:field="*{password}" th:errorclass="field-error" type="password" class="form-control"
+                   placeholder="비밀번호를 입력하세요">
+            <div th:errors="*{password}" class="field-error">비밀번호 오류</div>
+        </div>
+
+        <div>
+            <label>도시</label>
+            <input th:field="*{city}" th:errorclass="field-error" type="text" class="form-control"
+                   placeholder="도시를 입력하세요">
+            <div th:errors="*{city}" class="field-error">도시 오류</div>
+
+        </div>
+
+        <div>
+            <label>거리</label>
+            <input th:field="*{street}" th:errorclass="field-error" type="text" class="form-control"
+                   placeholder="거리를 입력하세요">
+            <div th:errors="*{street}" class="field-error">거리 오류</div>
+
+        </div>
+
+        <div>
+            <label>우편번호</label>
+            <input th:field="*{zipcode}" th:errorclass="field-error" type="text" class="form-control"
+                   placeholder="우편번호를 입력하세요">
+            <div th:errors="*{zipcode}" class="field-error">우편번호 오류</div>
+
+        </div>
+
+        <hr class="my-4">
+
+        <button th:text="#{button.join}" type="submit" class="btn btn-danger btn">
+            Summit
+        </button>
+
+        <button th:text="#{button.cancel}" th:onclick="|location.href='@{/}'|"
+                type="button" class="btn btn-danger btn" >
+            Cancel
+        </button>
+
+    </form>
+</div> <!-- /container -->
+</body>
+</html>

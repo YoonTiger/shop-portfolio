@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="basic.shop.repository.ItemRepository">
+
+    <resultMap id="itemMap" type="item">
+        <id property="id" column="item_id"/>
+        <result property="name" column="item_name"/>
+        <result property="price" column="item_price"/>
+        <result property="stockQuantity" column="item_stockQuantity"/>
+
+        <association property="member" column="member_id" resultMap="memberMap"/>
+
+    </resultMap>
+
+    <!--memberMap-->
+    <resultMap id="memberMap" type="member">
+        <id property="id" column="member_id"/>
+        <result property="name" column="member_name"/>
+        <result property="password" column="member_password"/>
+
+        <association property="address" javaType="Address">
+            <result property="city" column="city"/>
+            <result property="street" column="street"/>
+            <result property="zipcode" column="zipcode"/>
+        </association>
+
+    </resultMap>
+
+
+    <insert id="save" parameterType="item" useGeneratedKeys="true" keyProperty="id">
+        INSERT
+        INTO
+        item(item_name,item_price,item_stockQuantity,seller_id)
+        VALUES(#{name},#{price},#{stockQuantity},#{member.id})
+    </insert>
+
+    <update id="update" parameterType="item" useGeneratedKeys="true" keyProperty="id">
+        UPDATE
+        item
+        SET
+        item_name=#{name},item_price=#{price},item_stockQuantity=#{stockQuantity}
+        WHERE item_id=#{id}
+    </update>
+
+<!--    separator=";" 해주거나 밑에처럼 마지막에 ;넣어줘야함-->
+    <update id="updateAll" parameterType="List" useGeneratedKeys="true" keyProperty="id">
+        <foreach collection="list" item="item">
+            UPDATE
+            item
+            SET
+            item_name=#{item.name},item_price=#{item.price},item_stockQuantity=#{item.stockQuantity}
+            WHERE
+            item_id=#{item.id};
+        </foreach>
+    </update>
+
+
+    <delete id="delete" parameterType="Long">
+        DELETE
+        FROM
+        item
+        WHERE item_id=#{id}
+    </delete>
+
+
+    <select id="findAll" resultMap="itemMap">
+        SELECT *
+        FROM item i
+        JOIN member m
+        ON i.seller_id=m.member_id
+    </select>
+
+    <select id="findById" parameterType="Long" resultMap="itemMap">
+        SELECT *
+        FROM item i
+        JOIN member m
+        ON i.seller_id=m.member_id
+        WHERE item_id=#{id}
+    </select>
+
+    <select id="findByIds" parameterType="List" resultMap="itemMap">
+        SELECT *
+        FROM item i
+        JOIN member m
+        ON i.seller_id=m.member_id
+        WHERE item_id
+        IN
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+
+
+
+</mapper>

@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../../css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .container {
+            max-width: 500px;
+        }
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="py-5 text-center">
+        <h2>나의 정보</h2>
+    </div>
+
+    <form th:object="${member}" method="post">
+
+        <div>
+            <label>아이디</label>
+            <input th:field="*{name}" class="form-control" readonly>
+        </div>
+
+        <div>
+            <label>비밀번호</label>
+            <input th:field="*{password}" th:errorclass="field-error" class="form-control">
+            <div th:errors="*{password}" class="field-error">비밀번호 오류</div>
+        </div>
+
+        <div>
+            <label>도시</label>
+            <input th:field="*{city}" th:errorclass="field-error" class="form-control">
+            <div th:errors="*{city}" class="field-error">도시 오류</div>
+
+        </div>
+
+        <div>
+            <label>거리</label>
+            <input th:field="*{street}" th:errorclass="field-error" class="form-control">
+            <div th:errors="*{street}" class="field-error">거리 오류</div>
+
+        </div>
+
+        <div>
+            <label>우편번호</label>
+            <input th:field="*{zipcode}" th:errorclass="field-error" class="form-control">
+            <div th:errors="*{zipcode}" class="field-error">우편번호 오류</div>
+
+        </div>
+
+        <hr class="my-4">
+
+        <div class="row">
+
+            <div class="col">
+                <button th:text="#{button.update}" class="btn btn-danger btn" type="submit">
+                    update
+                </button>
+                <a th:href="|@{/member/info}|"
+                   th:text="#{button.back}" class="btn btn-secondary btn" type="button">
+                    back
+                </a>
+            </div>
+
+        </div>
+    </form>
+
+</div> <!-- /container -->
+</body>
+</html>

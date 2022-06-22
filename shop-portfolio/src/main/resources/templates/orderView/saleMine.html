@@ -1,0 +1,95 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../../css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container" style="max-width: 800px">
+
+    <div class="py-5 text-center">
+        <h2>나의 판매 현황</h2>
+    </div>
+
+    <hr class="my-4">
+
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>주문 번호</th>
+                <th>주문 고객</th>
+                <th>주문 시간</th>
+                <th>주문 상태</th>
+                <th>배송 상태</th>
+                <th>주소</th>
+
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="order : ${orders}">
+                <td>
+                    <a th:text="${order.id}" th:href="|@{/order/{id}/saleInfo(id=${order.id})}|">
+                        주문 번호
+                    </a>
+                </td>
+                <td>
+                    <a th:text="${order.member.name}">
+                        구매자
+                    </a>
+                </td>
+                <td>
+                    <a th:text="${order.orderDate}">
+                        주문시간
+                    </a>
+                </td>
+                <td>
+                    <a th:text="${order.orderStatus}">
+                        주문 상태
+                    </a>
+                </td>
+                <td>
+                    <a th:text="|${order.deliveryStatus}|">
+                        배송 상태
+                    </a>
+                </td>
+                <td>
+                    <a th:text="|${order.address.city}|">도시</a>
+                    <a th:text="|${order.address.street}|">거리</a>
+                    <a th:text="|${order.address.zipcode}|">우편번호</a>
+                </td>
+            </tr>
+
+            </tbody>
+
+        </table>
+
+        </form>
+
+        <div class="row">
+            <div class="col">
+                <button th:text="#{button.home}" th:onclick="|location.href='@{/}'|"
+                        class="btn btn-danger float-start" type="button">
+                    Home
+                </button>
+            </div>
+            <div class="col">
+                <a th:href="|@{/member/info}|"
+                   th:text="#{button.back}" class="btn btn-secondary btn float-end" type="button">
+                    back
+                </a>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div> <!-- /container -->
+</body>
+</html>
