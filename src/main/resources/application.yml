@@ -5,7 +5,7 @@ spring:
 #    password: 1qaz
 #    driver-class-name: com.mysql.cj.jdbc.Driver
 
-    url: jdbc:mysql://https://openmarket110.herokuapp.com//heroku_353c9463c6bf02d?serverTimezone=UTC&characterEncoding=UTF-8&allowMultiQueries=true
+    url: jdbc:mysql://openmarket110.herokuapp.com//heroku_353c9463c6bf02d?serverTimezone=UTC&characterEncoding=UTF-8&allowMultiQueries=true
       username: b4fa617bbe173e
       password: 87a36328
       driver-class-name: com.mysql.cj.jdbc.Driver
