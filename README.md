@@ -3,7 +3,8 @@
 
 Spring Boot + MyBatis + MySQL + Gradle + IntelliJ
 
-배포주소
+배포주소 https://openmarket110.herokuapp.com/
+
 
 모든 회원은 상품을 등록할수 있고 다른 회원이 등록한 상품을 구매할수도 있다
 
