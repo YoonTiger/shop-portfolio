@@ -1,0 +1,22 @@
+spring:
+  datasource:
+
+    url: jdbc:mysql://localhost:3306/basicshop?serverTimezone=UTC&characterEncoding=UTF-8&allowMultiQueries=true
+    username: tiger
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+  messages:
+    basename: messages, errors
+
+
+mybatis:
+  mapper-locations: classpath:mapper/*xml
+  config-location: classpath:config/mybatis-config.xml
+
+
+#server:
+#  port: ${port:8080}
+
+
