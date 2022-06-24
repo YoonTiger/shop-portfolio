@@ -8,17 +8,17 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 
-//@Slf4j
-//@ControllerAdvice
-//public class ExHandler {
-//
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-//    @ExceptionHandler(Exception.class)
-//    public String exHandle(Exception e, Model model){
-//
-//        ErrorResult errorMessage = new ErrorResult(e.getMessage());
-//        model.addAttribute("ex", errorMessage);
-//        return "error/ex";
-//    }
-//
-//}
+@Slf4j
+@ControllerAdvice
+public class ExHandler {
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(Exception.class)
+    public String exHandle(Exception e, Model model){
+
+        ErrorResult errorMessage = new ErrorResult(e.getMessage());
+        model.addAttribute("ex", errorMessage);
+        return "error/ex";
+    }
+
+}

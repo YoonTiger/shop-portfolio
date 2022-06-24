@@ -16,7 +16,6 @@ mybatis:
   config-location: classpath:config/mybatis-config.xml
 
 
-#server:
-#  port: ${port:8080}
+
 
 
